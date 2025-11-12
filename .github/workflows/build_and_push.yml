@@ -1,0 +1,53 @@
+# .github/workflows/build_and_push.yml
+
+name: CICD for ETL Project (Docker Hub)
+
+# Kích hoạt workflow khi có push lên nhánh 'main'
+on:
+  push:
+    branches: [ "master" ]
+  # Bạn có thể thêm 'workflow_dispatch:' để chạy thủ công từ GitHub UI
+
+# Định nghĩa các công việc (jobs) sẽ chạy
+jobs:
+  build_and_push:
+    # Chọn hệ điều hành để chạy job
+    runs-on: ubuntu-latest
+
+    # Các bước sẽ được thực hiện trong job này
+    steps:
+      - name: 📦 Checkout code
+        # Lấy code từ repo
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Set up Docker Buildx
+        # Thiết lập Docker Buildx để build image hiệu quả
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔑 Log in to Docker Hub
+        # Đăng nhập vào Docker Hub bằng secrets đã thiết lập
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 🏷️ Extract metadata (tags) for Docker
+        # Tự động tạo tên và tags cho image dựa trên tên repo và commit SHA
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/customer-etl-project
+          # Các tag sẽ được tạo: latest (cho nhánh main), và short SHA của commit
+          tags: |
+            type=sha,prefix=,format=true,value=${{ github.sha }}
+
+      - name: 🏗️ Build and Push Docker image
+        # ✅ ĐÃ SỬA: Tên Action chính xác là 'build-push-action'
+        uses: docker/build-push-action@v5 
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Bạn có thể chỉ định Dockerfile nếu nó không ở thư mục gốc,
+          # nhưng trong trường hợp của bạn, nó đã ở thư mục gốc (context: .)
