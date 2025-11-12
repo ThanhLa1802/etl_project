@@ -42,7 +42,6 @@ jobs:
             type=sha,prefix=,format=true,value=${{ github.sha }}
 
       - name: 🏗️ Build and Push Docker image
-        # ✅ ĐÃ SỬA: Tên Action chính xác là 'build-push-action'
         uses: docker/build-push-action@v5 
         with:
           context: .
