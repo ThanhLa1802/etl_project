@@ -1,0 +1,8 @@
+2025-11-12 01:52:59,088 - INFO - ETL job started
+2025-11-12 01:52:59,088 - INFO - Extracting data from /data/customers-100000.csv
+2025-11-12 01:52:59,547 - INFO - Extracted 100000 rows
+2025-11-12 01:52:59,548 - INFO - Starting data transformation
+2025-11-12 01:52:59,595 - INFO - Transformed data: 100000 rows
+2025-11-12 01:52:59,599 - INFO - Loading data to users_cleaned
+2025-11-12 01:53:03,987 - INFO - Load completed successfully
+2025-11-12 01:53:03,988 - INFO - ETL job finished successfully

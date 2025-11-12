@@ -1,0 +1,32 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment
+.env
+venv/
+.env.local
+
+# Logs
+*.log
+
+# Database / SQL dumps
+*.sql
+*.sqlite3
+
+# Docker
+*.dockerfile
+docker-compose.override.yml
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# ETL temp / output files
+output/
+data_dump.sql
