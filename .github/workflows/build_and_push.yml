@@ -36,10 +36,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/customer-etl-project
-          # Các tag sẽ được tạo: latest (cho nhánh main), và short SHA của commit
+          images: ${{ secrets.DOCKER_USERNAME }}/customer-etl-project 
           tags: |
-            type=sha,prefix=,format=true,value=${{ github.sha }}
+            # 1. Thẻ 'latest' (chỉ cho nhánh master)
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
+            # 2. Thẻ dựa trên SHA (sử dụng SHA ngắn làm mặc định)
+            type=sha,prefix=
 
       - name: 🏗️ Build and Push Docker image
         uses: docker/build-push-action@v5 
