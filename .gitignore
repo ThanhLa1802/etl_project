@@ -14,6 +14,9 @@ venv/
 # Database / SQL dumps
 *.sql
 *.sqlite3
+#data files
+*.json
+*.csv
 
 # Docker
 *.dockerfile
@@ -30,3 +33,5 @@ Thumbs.db
 # ETL temp / output files
 output/
 data_dump.sql
+target/
+logs/scheduler/

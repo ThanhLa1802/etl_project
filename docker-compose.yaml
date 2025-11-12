@@ -1,8 +1,8 @@
 version: "3.8"
 
 services:
-  db:
-    image: postgres:13
+  postgres:
+    image: postgres:15
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
@@ -10,20 +10,26 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
 
-  elt_script:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  airflow:
+    image: apache/airflow:2.7.1
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://user:pass@postgres:5432/mydb
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW_UID: 50000
     depends_on:
-      - db
+      - postgres
     volumes:
-      - ./elt_script:/app/elt_script
-      - ./data:/data
-      - ./logs:/logs
-    working_dir: /app
-    command: python -u elt_script/elt_script.py
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - ./logs:/opt/airflow/logs
+      - ./dbt_project:/opt/airflow/dbt_project
+    ports:
+      - "8080:8080"
+    entrypoint: >
+      bash -c "pip install --quiet dbt-core dbt-postgres && airflow db init && airflow scheduler & airflow webserver"
 
 volumes:
-  db_data:
+  pg_data:

@@ -1,0 +1,9 @@
+name: customer_etl_project
+version: '1.0'
+config-version: 2
+
+profile: my_postgres   # trùng với tên profile trong profiles.yml
+target-path: target
+clean-targets:
+  - target
+  - dbt_modules
